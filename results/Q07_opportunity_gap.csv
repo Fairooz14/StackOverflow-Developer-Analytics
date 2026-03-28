@@ -1,0 +1,41 @@
+Id,Title,primary_tag,ViewCount,Score,AnswerCount,CommentCount,year,opportunity_score
+84600,JavaScript endpoint returns undefined,r,6188,55032248,0,1,2017,208661402.52
+1083,Java package vs struct performance,java,6180,61058045,1,3,2022,115737319.58
+12411,Difference between function and array,linux,28918,15039349,2,0,2018,22364432.21
+109158,How to encrypt a list in Python?,python,21887,4983059,1,1,2022,10813753.65
+183589,How to flatten async/await in JavaScript,javascript,6617,7970698,2,2,2012,10151287.66
+133483,Python stream not working as expected,python,3246,1768756,0,1,2020,6210958.88
+186062,How to authenticate token efficiently?,go,11044,4401242,2,2,2022,5931651.61
+94953,Java function throws NullPointerException,java,3068,3119694,2,1,2011,3626122.25
+54807,How to validate a list in Python?,html,58084,1642051,2,1,2016,2607613.6
+113366,Java promise throws NullPointerException,c#,14853,575573,0,1,2013,2401204.6
+135000,How to optimise async/await in JavaScript,javascript,6455,1222919,1,2,2010,2329640.29
+70277,request not working — need help,c#,20388,982453,1,0,2010,2116891.63
+60612,Best practice for iterateing module,c#,45350,406787,0,3,2010,1894243.66
+8009,Getting middleware error — how to fix?,php,81493,339954,0,1,2017,1669561.72
+86109,Python endpoint vs tuple — which to use?,node.js,3049,410370,0,1,2012,1429855.61
+138938,How to map list efficiently?,excel,8395,1085899,2,1,2017,1420383.42
+17860,Java class throws NullPointerException,java,13312,330226,0,2,2013,1361947.27
+21092,Java integer throws NullPointerException,excel,10054,524794,1,1,2019,1050215.05
+56101,How do I merge module without enum?,css,3600,566234,1,1,2022,1006885.62
+158215,How to debug a list in Python?,python,6934,210055,0,0,2019,806834.86
+123747,Difference between integer and struct,android,6071,370406,1,1,2010,700686.28
+166964,Difference between exception and tuple,php,9094,347098,1,2,2013,687048.23
+133820,JOIN vs subquery for config,node.js,5193,720274,3,3,2022,669045.79
+81841,Best way to authenticate function in Python,python,73993,253703,1,0,2015,617667.32
+150148,How to flatten state in React hooks,react,40146,130222,0,2,2022,599501.52
+128961,Optimising slow thread SQL query,sql,299179,308494,2,2,2014,563099.27
+43631,Fixing variable error in JavaScript,c++,236694,207500,1,0,2012,557574.8
+148586,Difference between string and set,android,15689,358508,2,0,2022,501389.53
+171711,Best practice for mergeing string,php,3334,137209,0,0,2016,483403.98
+46833,Best way to authenticate object in Python,c#,83069,94199,0,0,2021,463411.64
+143805,How to validate config efficiently?,android,9756,114630,0,2,2020,457299.32
+170027,Best way to mock pipeline in Python,python,8429,99625,0,2,2015,391114.5
+22194,Python payload not working as expected,c++,28718,84918,0,1,2013,378583.28
+192132,How to test object efficiently?,css,4423,93227,0,4,2011,339892.05
+34433,JavaScript package returns undefined,css,29468,61727,0,0,2015,275884.99
+2296,Difference between function and map,linux,31800,60062,0,2,2014,270430.1
+128208,How to test class efficiently?,postgresql,3366,75012,0,2,2014,264589.09
+193840,Fixing process error in JavaScript,css,3601,218393,2,0,2013,258909.27
+60795,Getting session error — how to fix?,linux,12377,59073,0,1,2010,241769.23
+130591,How to mock list efficiently?,css,8216,119760,1,1,2021,234414.99

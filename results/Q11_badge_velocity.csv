@@ -1,0 +1,4 @@
+Tier,users_with_badge,avg_days_to_first_badge,median_days,avg_total_badges,avg_gold,avg_silver,avg_bronze
+expert,57,72.8,42.0,44.7,4.74,20.0,20.0
+intermediate,1279,128.2,75.0,23.9,0.06,3.88,20.0
+beginner,26089,1011.7,602.0,3.6,0.0,0.08,3.55
