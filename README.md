@@ -7,6 +7,7 @@ modelled on StackOverflow's real post/answer/user schema.
 **Dataset:** 200,000 questions · 350,000 answers · 50,000 users · 39 tags · ~800,000 badge events  
 **Skills:** Window functions · CTEs · percentile analysis · cohort retention · time-series · funnel analysis · geospatial aggregation · power-law modelling
 
+
 ---
 
 ## Pipeline architecture
@@ -31,6 +32,7 @@ modelled on StackOverflow's real post/answer/user schema.
 The pipeline is designed as three **decoupled, independently runnable stages**.
 Tweak a SQL query and re-run only `queries.py` + `visualize.py` — no need to
 regenerate the dataset.
+
 
 ---
 
@@ -81,6 +83,8 @@ real StackOverflow behaviour.
 
 ## Visualisations
 
+All charts use a clean white editorial aesthetic — `#FFFFFF` canvas,
+`#F8F9FA` panel backgrounds, bold accent colours, tight `#DEE2E6` grid.
 Every chart is a standalone PNG at 150 DPI.
 
 | Chart | Type | File |
@@ -161,6 +165,12 @@ Volume is flat across the 13-year window — a known artefact of uniform date
 sampling in the generator. A future improvement is weighting question creation
 dates toward more recent years to reflect real platform growth.
 
+The `avg_score` column in this result is unreliable: several months show
+values in the millions (e.g. January 2010: 4,910,955) caused by a small
+number of questions with extreme scores inflating the monthly average. The
+volume trend line is valid; the rolling avg score line on the chart should
+be interpreted with caution.
+
 ---
 
 ### Q04 — Engagement funnel
@@ -185,13 +195,15 @@ actionable solutions.
 
 | User segment | Share of high-score questions |
 |-------------|-------------------------------|
-| Top 1% by reputation | 57.8% |
-| Top 10% by reputation | 94.6% |
+| Top 1% by reputation (500 users) | 39.1% |
+| Top 2% by reputation (1,000 users) | 51.9% |
+| Top 10% by reputation (5,000 users) | 63.6% |
 
-The bottom 90% of users collectively produce only **5.4%** of high-quality
-content. This is the steepest and most consistent finding in the dataset —
-a classic Pareto distribution that reflects how reputation-weighted data
-generation concentrates scoring power among elite users.
+The top 1% of users — just 500 people out of 50,000 — produce **39.1%** of
+all high-score questions. The top 10% account for **63.6%**, leaving the
+bottom 90% responsible for only 36.4% of high-quality content. A genuine
+Pareto distribution driven by the reputation-weighted scoring in the generator.
+
 
 ---
 
@@ -225,6 +237,30 @@ and a concrete area for a future generator improvement.
 
 ---
 
+### Q10 — Answer quality by user tier
+
+This is the richest cross-tab in the dataset. Expert users do not just answer
+more — their answers score dramatically higher across every tag:
+
+| Tag | Beginner avg score | Intermediate avg score | Expert avg score | Expert / Beginner |
+|-----|--------------------|----------------------|-----------------|-------------------|
+| react | 5.25 | 140.93 | 51,416 | **9,794×** |
+| java | 5.94 | 267.90 | 5,871 | **988×** |
+| python | 6.42 | 212.09 | 2,354 | **367×** |
+| sql | 5.42 | 60.24 | 1,363 | **251×** |
+| rust | 4.50 | 26.30 | 239 | **53×** |
+
+The expert/beginner score gap ranges from 53× (rust) to nearly 10,000× (react).
+Expert accept rates are consistently around **40–45%** vs **11–12%** for
+intermediates and **22–24%** for beginners. Expert response time (P50 ~36–37 h)
+is roughly **2× faster** than intermediate (~75 h).
+
+The `react` outlier (51,416 avg expert score) warrants a note: a small number
+of very high-scoring accepted answers are inflating the expert mean. The median
+score for expert react answers is 17 — more representative of typical quality.
+
+---
+
 ### Q11 — Badge velocity by user tier
 
 | Tier | Median days to first badge | Avg gold badges |
@@ -245,15 +281,45 @@ working as intended.
 
 | Country | Productivity index | Expert share | Users |
 |---------|-------------------|-------------|-------|
-| Germany | 1,856,845 | 0% | 3,410 |
-| South Korea | 323,806 | 1% | 472 |
-| France | 52,086 | 0% | 2,342 |
+| Germany | 1,856,845 | 0.1% | 3,410 |
+| South Korea | 323,806 | 0.6% | 472 |
+| France | 52,086 | 0.3% | 2,342 |
+| United States | 13,923 | 0.1% | 12,463 |
 
-Germany's index is orders of magnitude above other countries despite showing
-0% expert share — a scoring anomaly. The composite index (`SUM(score) /
-COUNT(users)`) is sensitive to a small number of very high-scoring questions
-being disproportionately assigned to German users during random generation.
-This would need to be corrected before drawing geographic conclusions.
+Germany's index (1,856,845) is 133× higher than the USA (13,923) despite
+similar expert share. The root cause traces to Q14: the three highest
+`platform_value_score` users in the entire dataset are all located in Germany
+(`algomaster1132`, `nuller84`, `user_1160`), and their astronomical scores
+are caused by a **composite score overflow bug** in the leaderboard formula —
+a very high `q_score_total` value from one extreme question multiplies through
+the weighting and inflates those users' scores by orders of magnitude. Since
+the geo productivity index is `SUM(score) / COUNT(users)`, those three users
+alone are pulling Germany's average to an unrealistic level. This would need
+to be corrected (e.g. using median instead of mean, or capping outlier scores)
+before any geographic conclusions can be drawn.
+
+---
+
+### Q14 — Power user leaderboard
+
+| User | Reputation | Location | Questions | Accepted answers | Platform value score |
+|------|-----------|----------|-----------|-----------------|---------------------|
+| algomaster1132 | 10,966 | Germany | 490 | 380 | 5,836,962,104 |
+| nuller84 | 26,542 | Germany | 512 | 373 | 335,402,179 |
+| user_1160 | 12,100 | Germany | 478 | 330 | 166,273,585 |
+
+The top score (5.8 billion) is **17× higher** than the second place (335M),
+and both dwarf the rest of the top 30 (most score in the 5–20M range). This
+is a **composite score overflow bug**: the formula multiplies `q_score_total`
+by 1.0, but a single question with a very high score (e.g. the JavaScript
+question with `avg_score` of ~140k seen in Q04) produces a `q_score_total`
+so large that it dominates the composite entirely. The fix is to cap or
+log-transform individual question scores before aggregating, or use median
+score per user instead of sum.
+
+`user_3828` (rank 13, reputation 1,695, intermediate tier, only 45 questions)
+is another anomaly — ranked above dozens of experts. Same root cause: one
+high-scoring question in their history is inflating their composite value.
 
 ---
 
